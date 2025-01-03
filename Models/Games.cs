@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Games.Models;
 
@@ -10,7 +11,8 @@ public class Game {
     public string ReleaseYear {get;set;} = null!;
     [Required]
     public List<string> Developers {get;set;} = null!;
-    [Required]
-    public string Publisher {get;set;} = null!;
+    [ForeignKey("PublisherId")]
+    public Publisher Publisher {get;set;} = null!;
+    public int PublisherId {get;set;}
     public decimal? Revenue {get;set;}
 }
