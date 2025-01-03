@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Games.Migrations
 {
     [DbContext(typeof(GamesContext))]
-    [Migration("20250103141255_adjust-publisher-entity")]
-    partial class adjustpublisherentity
+    [Migration("20250103142659_games-publisher-entity")]
+    partial class gamespublisherentity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,9 +37,6 @@ namespace Games.Migrations
                         .IsRequired()
                         .HasColumnType("text[]");
 
-                    b.Property<int?>("GameId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("GameTitle")
                         .IsRequired()
                         .HasColumnType("text");
@@ -56,8 +53,6 @@ namespace Games.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GameId");
-
                     b.HasIndex("PublisherId");
 
                     b.ToTable("Game");
@@ -71,9 +66,6 @@ namespace Games.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("GameId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -85,12 +77,8 @@ namespace Games.Migrations
 
             modelBuilder.Entity("Games.Models.Game", b =>
                 {
-                    b.HasOne("Games.Models.Publisher", null)
-                        .WithMany("Game")
-                        .HasForeignKey("GameId");
-
                     b.HasOne("Games.Models.Publisher", "Publisher")
-                        .WithMany()
+                        .WithMany("Game")
                         .HasForeignKey("PublisherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

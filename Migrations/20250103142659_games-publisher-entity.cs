@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Games.Migrations
 {
     /// <inheritdoc />
-    public partial class initialCreate : Migration
+    public partial class gamespublisherentity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,8 +18,7 @@ namespace Games.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    GameId = table.Column<int>(type: "integer", nullable: false)
+                    Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -36,17 +35,11 @@ namespace Games.Migrations
                     ReleaseYear = table.Column<string>(type: "text", nullable: false),
                     Developers = table.Column<List<string>>(type: "text[]", nullable: false),
                     PublisherId = table.Column<int>(type: "integer", nullable: false),
-                    Revenue = table.Column<decimal>(type: "numeric", nullable: true),
-                    GameId = table.Column<int>(type: "integer", nullable: true)
+                    Revenue = table.Column<decimal>(type: "numeric", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Game", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Game_Publisher_GameId",
-                        column: x => x.GameId,
-                        principalTable: "Publisher",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Game_Publisher_PublisherId",
                         column: x => x.PublisherId,
@@ -54,11 +47,6 @@ namespace Games.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Game_GameId",
-                table: "Game",
-                column: "GameId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Game_PublisherId",
