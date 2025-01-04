@@ -16,3 +16,16 @@ public class Game {
     public int PublisherId {get;set;}
     public decimal? Revenue {get;set;}
 }
+
+public class GameDto {
+    public int Id {get;set;}
+    [Required]
+    public string GameTitle {get;set;} = null!;
+    [Required]
+    public string ReleaseYear {get;set;} = null!;
+    [Required]
+    public List<string> Developers {get;set;} = null!;
+    [ForeignKey("PublisherId")]
+    public PublisherDto Publisher {get;set;} = null!;
+    public decimal? Revenue {get;set;}
+}
