@@ -12,10 +12,10 @@ public class Game
     public string ReleaseYear { get; set; } = null!;
     [Required]
     public List<string> Developers { get; set; } = null!;
+    public decimal? Revenue { get; set; }
     [ForeignKey("PublisherId")]
     public Publisher Publisher { get; set; } = null!;
     public int PublisherId { get; set; }
-    public decimal? Revenue { get; set; }
 }
 
 public class GameDto
@@ -27,7 +27,7 @@ public class GameDto
     public string ReleaseYear { get; set; } = null!;
     [Required]
     public List<string> Developers { get; set; } = null!;
-    [Required]
-    public string PublisherName = null!;
     public decimal? Revenue { get; set; }
+    [Required]
+    public string PublisherName  { get; set; } = null!;
 }

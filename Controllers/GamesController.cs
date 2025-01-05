@@ -19,6 +19,7 @@ namespace Games.Controllers
         /// </summary>
         /// <returns> A list of games.</returns>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IQueryable<GameDto>))]
         public ActionResult<IQueryable<GameDto>> GetGames()
         {
             var games = _gameService.GetGames();

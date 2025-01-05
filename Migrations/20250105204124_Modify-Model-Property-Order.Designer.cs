@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Games.Migrations
 {
     [DbContext(typeof(GamesContext))]
-    [Migration("20250103142659_games-publisher-entity")]
-    partial class gamespublisherentity
+    [Migration("20250105204124_Modify-Model-Property-Order")]
+    partial class ModifyModelPropertyOrder
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

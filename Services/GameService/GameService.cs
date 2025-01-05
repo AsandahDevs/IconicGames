@@ -24,38 +24,39 @@ public class GameService : IGame
 
    public IQueryable<GameDto> GetGames()
    {
-      var games = from game in _context.Game
-                  join publisher in _context.Publisher on game.PublisherId equals publisher.Id
-                  select new GameDto
-                  {
-                     Id = game.Id,
-                     GameTitle = game.GameTitle,
-                     ReleaseYear = game.ReleaseYear,
-                     Developers = game.Developers,
-                     PublisherName = publisher.Name,
-                     Revenue = game.Revenue
-                  };
-
+      var games = _context.Game
+     .Include(game => game.Publisher)
+     .Select(game => new GameDto
+     {
+        Id = game.Id,
+        GameTitle = game.GameTitle,
+        ReleaseYear = game.ReleaseYear,
+        Developers = game.Developers,
+        Revenue = game.Revenue,
+        PublisherName = game.Publisher.Name
+     });
       return games;
-
    }
 
    public GameDto? GetGame(int id)
    {
-      var game = _context.Game.Include(game => game.Publisher).Select(game => new GameDto
+      var games = _context.Game
+      .Include(game => game.Publisher)
+      .Select(game => new GameDto
       {
          Id = game.Id,
          GameTitle = game.GameTitle,
          ReleaseYear = game.ReleaseYear,
          Developers = game.Developers,
-         PublisherName = game.Publisher.Name,
-         Revenue = game.Revenue
-      }).SingleOrDefault(game => game.Id == id);
-      if (game == null)
+         Revenue = game.Revenue,
+         PublisherName = game.Publisher.Name
+      });
+      var individualGame = games.FirstOrDefault(game => game.Id == id);
+      if (individualGame == null)
       {
          return null;
       }
-      return game;
+      return individualGame;
    }
 
    public IQueryable<GameDto> PostGame(GameDto game)
@@ -73,8 +74,8 @@ public class GameService : IGame
          GameTitle = game.GameTitle,
          ReleaseYear = game.ReleaseYear,
          Developers = game.Developers,
-         Publisher = publisher,
-         Revenue = game.Revenue
+         Revenue = game.Revenue,
+         Publisher = publisher
       };
 
       _context.Game.Add(newGame);
@@ -94,10 +95,6 @@ public class GameService : IGame
          _context.SaveChanges();
          return GetGames();
       }
-      else
-      {
-         return null;
-      }
-
+      return null;
    }
 }

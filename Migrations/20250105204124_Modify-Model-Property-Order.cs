@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Games.Migrations
 {
     /// <inheritdoc />
-    public partial class gamespublisherentity : Migration
+    public partial class ModifyModelPropertyOrder : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,8 +34,8 @@ namespace Games.Migrations
                     GameTitle = table.Column<string>(type: "text", nullable: false),
                     ReleaseYear = table.Column<string>(type: "text", nullable: false),
                     Developers = table.Column<List<string>>(type: "text[]", nullable: false),
-                    PublisherId = table.Column<int>(type: "integer", nullable: false),
-                    Revenue = table.Column<decimal>(type: "numeric", nullable: true)
+                    Revenue = table.Column<decimal>(type: "numeric", nullable: true),
+                    PublisherId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
