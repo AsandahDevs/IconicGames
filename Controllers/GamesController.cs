@@ -49,7 +49,7 @@ namespace Games.Controllers
         /// </summary>
         /// <returns> A Updated list of Games.</returns>
         [HttpPut("UpdateGame/{id}")]
-        public ActionResult<IQueryable<Game>> UpdateGame(int id, GameDto game)
+        public ActionResult<IQueryable<GameDto>> UpdateGame(int id, GameDto game)
         {
             var result = _gameService.PutGame(id, game);
             if (result is null)

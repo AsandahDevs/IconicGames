@@ -88,23 +88,27 @@ public class GameService : IGame
 
    public IQueryable<GameDto>? PutGame(int id, GameDto game)
    {
-      var gameExists = _context.Game.Any(g => g.Id == id);
+      var gameToUpdate = _context.Game.FirstOrDefault(g => g.Id == id);
       var publisher = _context.Publisher.FirstOrDefault(p => p.Name == game.PublisherName);
-      if (gameExists)
+      if (gameToUpdate != null && publisher != null)
       {
-         var updatedGame = new Game  //TODO: implement AutoMapper
-         {
-            Id = game.Id,
-            GameTitle = game.GameTitle,
-            ReleaseYear = game.ReleaseYear,
-            Developers = game.Developers,
-            Revenue = game.Revenue,
-            Publisher = publisher
-         };
-         _context.Entry(updatedGame).State = EntityState.Modified;
+         // Update properties
+         gameToUpdate.GameTitle = game.GameTitle;
+         gameToUpdate.ReleaseYear = game.ReleaseYear;
+         gameToUpdate.Developers = game.Developers;
+         gameToUpdate.Revenue = game.Revenue;
+         gameToUpdate.Publisher = publisher;
+
+         // Mark as modified
+         _context.Entry(gameToUpdate).State = EntityState.Modified;
+
          _context.SaveChanges();
+
          return GetGames();
       }
+      
       return null;
+
    }
+
 }
