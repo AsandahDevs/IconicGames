@@ -1,9 +1,11 @@
+
 namespace Games.Services.GameService;
 
-public interface IGame {
-   Task<List<Game>> GetGames();
-   Task<Game?> GetGame(int id);
-   Task<List<Game>?> PutGame(int id, Game game);
-   Task<List<Game>> PostGame(Game game);
-   Task<List<Game>?> DeleteGame(int id);
+public interface IGame
+{
+   IQueryable<GameDto>? GetGames();
+   GameDto? GetGame(int id);
+   IQueryable<GameDto>? PutGame(int id, GameDto game);
+   IQueryable<GameDto> PostGame(GameDto game);
+   IQueryable<GameDto>? DeleteGame(int id);
 }

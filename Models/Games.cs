@@ -3,29 +3,31 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Games.Models;
 
-public class Game {
-    public int Id {get;set;}
+public class Game
+{
+    public int Id { get; set; }
     [Required]
-    public string GameTitle {get;set;} = null!;
+    public string GameTitle { get; set; } = null!;
     [Required]
-    public string ReleaseYear {get;set;} = null!;
+    public string ReleaseYear { get; set; } = null!;
     [Required]
-    public List<string> Developers {get;set;} = null!;
+    public List<string> Developers { get; set; } = null!;
     [ForeignKey("PublisherId")]
-    public Publisher Publisher {get;set;} = null!;
-    public int PublisherId {get;set;}
-    public decimal? Revenue {get;set;}
+    public Publisher Publisher { get; set; } = null!;
+    public int PublisherId { get; set; }
+    public decimal? Revenue { get; set; }
 }
 
-public class GameDto {
-    public int Id {get;set;}
+public class GameDto
+{
+    public int Id { get; set; }
     [Required]
-    public string GameTitle {get;set;} = null!;
+    public string GameTitle { get; set; } = null!;
     [Required]
-    public string ReleaseYear {get;set;} = null!;
+    public string ReleaseYear { get; set; } = null!;
     [Required]
-    public List<string> Developers {get;set;} = null!;
-    [ForeignKey("PublisherId")]
-    public PublisherDto Publisher {get;set;} = null!;
-    public decimal? Revenue {get;set;}
+    public List<string> Developers { get; set; } = null!;
+    [Required]
+    public string PublisherName = null!;
+    public decimal? Revenue { get; set; }
 }
