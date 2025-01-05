@@ -26,7 +26,7 @@ public class GameService : IGame
    {
       var games = _context.Game
      .Include(game => game.Publisher)
-     .Select(game => new GameDto
+     .Select(game => new GameDto   //TODO: implement AutoMapper
      {
         Id = game.Id,
         GameTitle = game.GameTitle,
@@ -42,7 +42,7 @@ public class GameService : IGame
    {
       var games = _context.Game
       .Include(game => game.Publisher)
-      .Select(game => new GameDto
+      .Select(game => new GameDto      //TODO: implement AutoMapper
       {
          Id = game.Id,
          GameTitle = game.GameTitle,
@@ -68,7 +68,7 @@ public class GameService : IGame
          _context.Publisher.Add(publisher); // Adding a new publisher to publisher table , if they don't exist.
       }
 
-      var newGame = new Game
+      var newGame = new Game //TODO: implement AutoMapper
       {
          Id = game.Id,
          GameTitle = game.GameTitle,
@@ -89,9 +89,19 @@ public class GameService : IGame
    public IQueryable<GameDto>? PutGame(int id, GameDto game)
    {
       var gameExists = _context.Game.Any(g => g.Id == id);
+      var publisher = _context.Publisher.FirstOrDefault(p => p.Name == game.PublisherName);
       if (gameExists)
       {
-         _context.Entry(game).State = EntityState.Modified;
+         var updatedGame = new Game  //TODO: implement AutoMapper
+         {
+            Id = game.Id,
+            GameTitle = game.GameTitle,
+            ReleaseYear = game.ReleaseYear,
+            Developers = game.Developers,
+            Revenue = game.Revenue,
+            Publisher = publisher
+         };
+         _context.Entry(updatedGame).State = EntityState.Modified;
          _context.SaveChanges();
          return GetGames();
       }
