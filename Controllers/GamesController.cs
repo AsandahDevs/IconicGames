@@ -39,7 +39,24 @@ namespace Games.Controllers
             {
                 return NotFound();
             }
-            return game;
+            return Ok(game);
+        }
+
+         // GET: Games/Publisher/5
+        /// <summary>
+        /// Retrieves individual publisher info
+        /// </summary>
+        /// <returns> A publisher.</returns>
+        [HttpGet("Publisher/{id}")]
+        public ActionResult<Publisher> GetPublisher(int id)
+        {
+            var publisher = _gameService.GetPublisher(id);
+
+            if (publisher == null)
+            {
+                return NotFound();
+            }
+            return Ok(publisher);
         }
 
         // PUT: Games/UpdateGame/5

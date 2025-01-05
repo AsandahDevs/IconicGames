@@ -59,6 +59,19 @@ public class GameService : IGame
       return individualGame;
    }
 
+   public Publisher? GetPublisher(int id)
+   {
+      var publishers = _context.Publisher
+      .Include(publisher => publisher.Game)
+      .Select(publisher =>  new Publisher { Id = publisher.Id, Name = publisher.Name , Game = publisher.Game});
+      var publisher = publishers.FirstOrDefault(pub => pub.Id == id);
+      if (publisher == null)
+      {
+         return null;
+      }
+      return publisher;
+   }
+
    public IQueryable<GameDto> PostGame(GameDto game)
    {
       var publisher = _context.Publisher.FirstOrDefault(p => p.Name == game.PublisherName);
