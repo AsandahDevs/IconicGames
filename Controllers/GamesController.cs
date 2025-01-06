@@ -19,9 +19,9 @@ namespace Games.Controllers
         /// </summary>
         /// <returns> A list of games.</returns>
         [HttpGet]
-        public ActionResult<IQueryable<GameDto>> GetGames()
+        public async Task<ActionResult<IQueryable<GameDto>>> GetGames()
         {
-            var games = _gameService.GetGames();
+            var games = await _gameService.GetGames();
             return Ok(games);
         }
 
@@ -31,9 +31,9 @@ namespace Games.Controllers
         /// </summary>
         /// <returns> A game.</returns>
         [HttpGet("{id}")]
-        public ActionResult<GameDto> GetGame(int id)
+        public async Task<ActionResult<GameDto>> GetGame(int id)
         {
-            var game = _gameService.GetGame(id);
+            var game = await _gameService.GetGame(id);
 
             if (game == null)
             {
@@ -48,9 +48,9 @@ namespace Games.Controllers
         /// </summary>
         /// <returns> A publisher.</returns>
         [HttpGet("Publisher/{id}")]
-        public ActionResult<Publisher> GetPublisher(int id)
+        public async Task<ActionResult<Publisher>> GetPublisher(int id)
         {
-            var publisher = _gameService.GetPublisher(id);
+            var publisher = await _gameService.GetPublisher(id);
 
             if (publisher == null)
             {
@@ -66,9 +66,9 @@ namespace Games.Controllers
         /// </summary>
         /// <returns> A Updated list of Games.</returns>
         [HttpPut("UpdateGame/{id}")]
-        public ActionResult<IQueryable<GameDto>> UpdateGame(int id, GameDto game)
+        public async Task<ActionResult<IQueryable<GameDto>>> UpdateGame(int id, GameDto game)
         {
-            var result = _gameService.PutGame(id, game);
+            var result = await _gameService.PutGame(id, game);
             if (result is null)
             {
                 return NotFound();
@@ -86,13 +86,13 @@ namespace Games.Controllers
         /// </summary>
         /// <returns> A new list of games added to a database.</returns>
         [HttpPost("AddGame")]
-        public ActionResult<IQueryable<GameDto>> AddGame(GameDto game)
+        public  async Task<ActionResult<IQueryable<GameDto>>> AddGame(GameDto game)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var newGame = _gameService.PostGame(game);
+            var newGame = await _gameService.PostGame(game);
             return CreatedAtAction("GetGame", new { id = game.Id }, newGame);
         }
 
@@ -102,9 +102,9 @@ namespace Games.Controllers
         /// </summary>
         /// <returns> Current list of games.</returns>
         [HttpDelete("Delete/{id}")]
-        public ActionResult<IQueryable<GameDto>> DeleteGame(int id)
+        public async Task<ActionResult<IQueryable<GameDto>>> DeleteGame(int id)
         {
-            var result = _gameService.DeleteGame(id);
+            var result = await _gameService.DeleteGame(id);
             if (result is null)
             {
                 return NotFound();
