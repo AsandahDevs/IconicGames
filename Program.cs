@@ -17,8 +17,13 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Games API", Version = "v1" });
 });
 builder.Services.AddScoped<IGame, GameService>();
-builder.Services.AddDbContext<GamesContext>(opt =>
-    opt.UseNpgsql("GamingDatabaseConnection"));
+
+var connectionString = builder.Configuration.GetConnectionString("GamingDatabaseConnection") ??
+     throw new InvalidOperationException("Connection string 'GamingDatabaseConnection'" +
+    " not found.");
+
+builder.Services.AddDbContext<GamesContext>(options =>
+    options.UseNpgsql(connectionString));
 
 
 var app = builder.Build();
@@ -30,7 +35,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Games API v1"));
 }
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

@@ -15,7 +15,7 @@ services:
     depends_on:
       - pgslqdatabase
     networks:
-      - dotnetToPostgres
+      - custom_container_network
 
    # postgres database
   pgslqdatabase:
@@ -33,10 +33,10 @@ services:
     volumes:
       - gamesdbdata:/var/lib/postgresql/data
     networks:
-      - dotnetToPostgres
+      - custom_container_network
 
 networks:
-  dotnetToPostgres:
+  custom_container_network:
      driver: bridge
 
 volumes:
