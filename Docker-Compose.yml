@@ -35,6 +35,22 @@ services:
     networks:
       - custom_container_network
 
+   # Backup service
+  db_backup:
+    image: postgres:17-alpine
+    container_name: db_backup
+    depends_on:
+      - psql_db
+    env_file:
+      - .env
+    volumes:
+      - ./backups:/backups             
+      - gamesdbdata:/var/lib/postgresql/data
+    networks:
+      - custom_container_network
+    entrypoint: /bin/sh -c "echo '0 0 1 */3 * pg_dump -h psql_db -U ${DB_USER} ${DB_NAME} > /backups/backup_$(date +\%Y\%m\%d\%H\%M\%S).sql' | crontab - && crond -f" # backup cron job (every 3 months)
+
+
 networks:
   custom_container_network:
     driver: bridge
