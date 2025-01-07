@@ -236,12 +236,12 @@ namespace Games.Services.GameService
             return null;
         }
 
-        public async Task<Publisher?> GetPublisher(int id)
+        public async Task<PublisherDto?> GetPublisher(int id)
         {
             var publisher = await _context.Publisher
                 .Where(pub => pub.Id == id)
                 .Include(pub => pub.Game)
-                .Select(publisher => new Publisher { Id = publisher.Id, Name = publisher.Name, Game = publisher.Game })
+                .Select(publisher => new PublisherDto { Id = publisher.Id, Name = publisher.Name, Games = (ICollection<GameDto>)publisher.Game })
                 .FirstOrDefaultAsync();
 
             return publisher;
