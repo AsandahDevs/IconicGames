@@ -2,6 +2,7 @@ global using Games.Models;
 global using Games.Data;
 using Games.Services.GameService;
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +17,9 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Games API", Version = "v1" });
 });
 builder.Services.AddScoped<IGame, GameService>();
-builder.Services.AddDbContext<GamesContext>();
+builder.Services.AddDbContext<GamesContext>(opt =>
+    opt.UseNpgsql("GamingDatabaseConnection"));
+
 
 var app = builder.Build();
 
@@ -27,7 +30,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Games API v1"));
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
