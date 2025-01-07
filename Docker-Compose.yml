@@ -1,8 +1,8 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  # .NetApi 
-  webapi:
+  # .NetApi
+  web_api:
     image: docker.io/library/gamesapi:latest
     container_name: dotnet_api
     build:
@@ -13,21 +13,21 @@ services:
     env_file:
       - .env
     depends_on:
-      - pgslqdatabase
+      - psql_db
     networks:
       - custom_container_network
 
-   # postgres database
-  pgslqdatabase:
+    # postgres database
+  psql_db:
     image: postgres:17-alpine
     restart: always
     container_name: postgres_db
     env_file:
       - .env
     environment:
-        POSTGRES_PASSWORD: ${DB_PASSWORD}
-        POSTGRES_USER: ${DB_USER}
-        POSTGRES_DB : ${DB_NAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: ${DB_NAME}
     ports:
       - "5432:5432"
     volumes:
@@ -37,7 +37,7 @@ services:
 
 networks:
   custom_container_network:
-     driver: bridge
+    driver: bridge
 
 volumes:
   gamesdbdata:

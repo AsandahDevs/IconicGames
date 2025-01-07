@@ -28,6 +28,13 @@ builder.Services.AddDbContext<GamesContext>(options =>
 
 var app = builder.Build();
 
+// Apply migrations at startup
+var scope = app.Services.CreateScope();
+
+var services = scope.ServiceProvider;
+var context = services.GetRequiredService<GamesContext>();
+context.Database.Migrate(); 
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
