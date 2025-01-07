@@ -117,7 +117,7 @@
 
 //          return GetGames();
 //       }
-      
+
 //       return null;
 
 //    }
@@ -169,7 +169,8 @@ namespace Games.Services.GameService
 
         public async Task<GameDto?> GetGame(int id)
         {
-            var games = _context.Game
+            var game = await _context.Game
+                .Where(g => g.Id == id)
                 .Include(game => game.Publisher)
                 .Select(game => new GameDto   // TODO: implement AutoMapper
                 {
@@ -179,10 +180,9 @@ namespace Games.Services.GameService
                     Developers = game.Developers,
                     Revenue = game.Revenue,
                     PublisherName = game.Publisher.Name
-                });
+                }).FirstOrDefaultAsync();
 
-            var individualGame = await games.FirstOrDefaultAsync(game => game.Id == id);
-            return individualGame;
+            return game;
         }
 
         public async Task<IQueryable<GameDto>> PostGame(GameDto game)
@@ -219,7 +219,7 @@ namespace Games.Services.GameService
             if (gameToUpdate != null && publisher != null)
             {
                 // Update properties
-                gameToUpdate.GameTitle = game.GameTitle;
+                gameToUpdate.GameTitle = game.GameTitle;       // TODO: implement AutoMapper
                 gameToUpdate.ReleaseYear = game.ReleaseYear;
                 gameToUpdate.Developers = game.Developers;
                 gameToUpdate.Revenue = game.Revenue;
@@ -240,7 +240,8 @@ namespace Games.Services.GameService
         {
             var publisher = await _context.Publisher
                 .Where(pub => pub.Id == id)
-                .Select(publisher => new Publisher { Id = publisher.Id, Name = publisher.Name })
+                .Include(pub => pub.Game)
+                .Select(publisher => new Publisher { Id = publisher.Id, Name = publisher.Name, Game = publisher.Game })
                 .FirstOrDefaultAsync();
 
             return publisher;
