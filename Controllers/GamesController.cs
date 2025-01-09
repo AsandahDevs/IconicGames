@@ -48,7 +48,7 @@ namespace Games.Controllers
         /// </summary>
         /// <returns> A publisher.</returns>
         [HttpGet("Publisher/{id}")]
-        public async Task<ActionResult<PublisherDto>> GetPublisher(int id)
+        public async Task<ActionResult<Publisher>> GetPublisher(int id)
         {
             var publisher = await _gameService.GetPublisher(id);
 
