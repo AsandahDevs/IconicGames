@@ -1,7 +1,6 @@
 version: "3.8"
 
 services:
-
   # .NetApi service
   web_api:
     image: docker.io/library/gamesapi:latest
@@ -16,7 +15,7 @@ services:
     depends_on:
       - psql_db
     volumes:
-      - .:/app
+      - appdata:/app/data
     networks:
       - custom_container_network
 
@@ -37,8 +36,13 @@ services:
       - gamesdbdata:/var/lib/postgresql/data
     networks:
       - custom_container_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-   # Backup service
+    # Backup service
   db_backup:
     image: postgres:17-alpine
     container_name: db_backup
@@ -47,27 +51,28 @@ services:
     env_file:
       - .env
     volumes:
-      - ./backups:/backups             
+      - ./backups:/backups
       - gamesdbdata:/var/lib/postgresql/data
     networks:
       - custom_container_network
     entrypoint: /bin/sh -c "echo '0 0 1 */3 * pg_dump -h psql_db -U ${DB_USER} ${DB_NAME} > /backups/backup_$(date +\%Y\%m\%d\%H\%M\%S).sql' | crontab - && crond -f" # backup cron job (every 3 months)
 
-# postgres web client 
+  # postgres web client
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin4
     restart: always
+    depends_on:
+      - psql_db
     ports:
       - "8888:80"
     environment:
       PGADMIN_DEFAULT_EMAIL: test@testing.com
       PGADMIN_DEFAULT_PASSWORD: testing
     volumes:
-      - pgadmin-data:/var/lib/pgadmin
+      - pgadmindata:/var/lib/pgadmin
     networks:
       - custom_container_network
-
 
 networks:
   custom_container_network:
@@ -75,4 +80,5 @@ networks:
 
 volumes:
   gamesdbdata:
-  pgadmin-data:
+  pgadmindata:
+  appdata:
