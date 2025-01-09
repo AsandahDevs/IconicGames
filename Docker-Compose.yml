@@ -15,6 +15,8 @@ services:
       - .env
     depends_on:
       - psql_db
+    volumes:
+      - .:/app
     networks:
       - custom_container_network
 
