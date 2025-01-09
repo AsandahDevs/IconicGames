@@ -1,7 +1,8 @@
 version: "3.8"
 
 services:
-  # .NetApi
+
+  # .NetApi service
   web_api:
     image: docker.io/library/gamesapi:latest
     container_name: dotnet_api
@@ -50,6 +51,7 @@ services:
       - custom_container_network
     entrypoint: /bin/sh -c "echo '0 0 1 */3 * pg_dump -h psql_db -U ${DB_USER} ${DB_NAME} > /backups/backup_$(date +\%Y\%m\%d\%H\%M\%S).sql' | crontab - && crond -f" # backup cron job (every 3 months)
 
+# postgres web client 
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin4
