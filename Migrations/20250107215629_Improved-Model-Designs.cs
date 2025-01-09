@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Games.Migrations
 {
     /// <inheritdoc />
-    public partial class ModifyModelPropertyOrder : Migration
+    public partial class ImprovedModelDesigns : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

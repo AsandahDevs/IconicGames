@@ -1,0 +1,84 @@
+version: "3.8"
+
+services:
+  # .NetApi service
+  web_api:
+    image: docker.io/library/gamesapi:latest
+    container_name: dotnet_api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:80"
+    env_file:
+      - .env
+    depends_on:
+      - psql_db
+    volumes:
+      - appdata:/app/data
+    networks:
+      - custom_container_network
+
+    # postgres database
+  psql_db:
+    image: postgres:17-alpine
+    restart: always
+    container_name: postgres_db
+    env_file:
+      - .env
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - gamesdbdata:/var/lib/postgresql/data
+    networks:
+      - custom_container_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    # Backup service
+  db_backup:
+    image: postgres:17-alpine
+    container_name: db_backup
+    depends_on:
+      - psql_db
+    env_file:
+      - .env
+    volumes:
+      - ./backups:/backups
+      - gamesdbdata:/var/lib/postgresql/data
+    networks:
+      - custom_container_network
+    entrypoint: /bin/sh -c "echo '0 0 1 */3 * pg_dump -h psql_db -U ${DB_USER} ${DB_NAME} > /backups/backup_$(date +\%Y\%m\%d\%H\%M\%S).sql' | crontab - && crond -f" # backup cron job (every 3 months)
+
+  # postgres web client
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4
+    restart: always
+    depends_on:
+      - psql_db
+    ports:
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: test@testing.com
+      PGADMIN_DEFAULT_PASSWORD: testing
+    volumes:
+      - pgadmindata:/var/lib/pgadmin
+    networks:
+      - custom_container_network
+
+networks:
+  custom_container_network:
+    driver: bridge
+
+volumes:
+  gamesdbdata:
+  pgadmindata:
+  appdata:

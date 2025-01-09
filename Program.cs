@@ -2,6 +2,7 @@ global using Games.Models;
 global using Games.Data;
 using Games.Services.GameService;
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,9 +17,23 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Games API", Version = "v1" });
 });
 builder.Services.AddScoped<IGame, GameService>();
-builder.Services.AddDbContext<GamesContext>();
+
+var connectionString = builder.Configuration.GetConnectionString("GamingDatabaseConnection") ??
+     throw new InvalidOperationException("Connection string 'GamingDatabaseConnection'" +
+    " not found.");
+
+builder.Services.AddDbContext<GamesContext>(options =>
+    options.UseNpgsql(connectionString));
+
 
 var app = builder.Build();
+
+// Apply migrations at startup
+var scope = app.Services.CreateScope();
+
+var services = scope.ServiceProvider;
+var context = services.GetRequiredService<GamesContext>();
+context.Database.Migrate(); 
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
