@@ -50,6 +50,20 @@ services:
       - custom_container_network
     entrypoint: /bin/sh -c "echo '0 0 1 */3 * pg_dump -h psql_db -U ${DB_USER} ${DB_NAME} > /backups/backup_$(date +\%Y\%m\%d\%H\%M\%S).sql' | crontab - && crond -f" # backup cron job (every 3 months)
 
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4
+    restart: always
+    ports:
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: test@testing.com
+      PGADMIN_DEFAULT_PASSWORD: testing
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    networks:
+      - custom_container_network
+
 
 networks:
   custom_container_network:
@@ -57,3 +71,4 @@ networks:
 
 volumes:
   gamesdbdata:
+  pgadmin-data:
