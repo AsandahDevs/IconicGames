@@ -3,6 +3,7 @@ global using Games.Data;
 using Games.Services.GameService;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,13 @@ var connectionString = builder.Configuration.GetConnectionString("GamingDatabase
 
 builder.Services.AddDbContext<GamesContext>(options =>
     options.UseNpgsql(connectionString));
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.Cookie.Name = "AuthenticationId";
+        options.ExpireTimeSpan = new TimeSpan(1,0,0,0);
+    });
 
 
 var app = builder.Build();
