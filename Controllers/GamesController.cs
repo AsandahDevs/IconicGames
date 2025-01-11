@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Games.Services.GameService;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Games.Controllers
 {
@@ -85,6 +86,7 @@ namespace Games.Controllers
         /// Adds a new game to a database
         /// </summary>
         /// <returns> A new list of games added to a database.</returns>
+        [Authorize]
         [HttpPost("AddGame")]
         public  async Task<ActionResult<IQueryable<GameDto>>> AddGame(GameDto game)
         {
