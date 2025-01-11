@@ -3,12 +3,12 @@ version: "3.8"
 services:
   # .NetApi service
   web_api:
-    image: docker.io/library/gamesapi:latest
+    image: mcr.microsoft.com/dotnet/sdk:8.0-alpine
     container_name: dotnet_api
     build:
       context: .
       dockerfile: Dockerfile
-    command: dotnet watch run --no-restore
+    command: dotnet watch run 
     ports:
       - "5000:80"
     env_file:
