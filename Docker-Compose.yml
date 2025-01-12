@@ -17,6 +17,7 @@ services:
       - psql_db
     volumes:
       - .:/app
+      - ./data-protection-keys:/root/.aspnet/DataProtection-Keys
     working_dir: /app
     networks:
       - custom_container_network
