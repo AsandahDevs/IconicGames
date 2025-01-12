@@ -8,9 +8,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: dotnet watch run 
+    command: dotnet watch run --no-launch-profile
     ports:
-      - "5000:80"
+      - "5010:5010"
     env_file:
       - .env
     depends_on:
