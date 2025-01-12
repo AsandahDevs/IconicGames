@@ -1,9 +1,9 @@
 global using Games.Models;
 global using Games.Data;
 using Games.Services.GameService;
-using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
