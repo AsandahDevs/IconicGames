@@ -1,13 +1,13 @@
 global using Games.Models;
 global using Games.Data;
 using Games.Services.GameService;
-using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -22,8 +22,15 @@ var connectionString = builder.Configuration.GetConnectionString("GamingDatabase
      throw new InvalidOperationException("Connection string 'GamingDatabaseConnection'" +
     " not found.");
 
+// Database configuration
 builder.Services.AddDbContext<GamesContext>(options =>
     options.UseNpgsql(connectionString));
+
+// Authentication configuration
+builder.Services.AddAuthorization();
+
+builder.Services.AddIdentityApiEndpoints<IdentityUser>()
+    .AddEntityFrameworkStores<GamesContext>();
 
 
 var app = builder.Build();
@@ -43,6 +50,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.MapIdentityApi<IdentityUser>();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

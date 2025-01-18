@@ -3,19 +3,22 @@ version: "3.8"
 services:
   # .NetApi service
   web_api:
-    image: docker.io/library/gamesapi:latest
+    image: mcr.microsoft.com/dotnet/sdk:8.0-alpine
     container_name: dotnet_api
     build:
       context: .
       dockerfile: Dockerfile
+    command: dotnet watch run --no-launch-profile
     ports:
-      - "5000:80"
+      - "5010:5010"
     env_file:
       - .env
     depends_on:
       - psql_db
     volumes:
-      - appdata:/app/data
+      - .:/app
+      - ./data-protection-keys:/root/.aspnet/DataProtection-Keys
+    working_dir: /app
     networks:
       - custom_container_network
 
@@ -81,4 +84,3 @@ networks:
 volumes:
   gamesdbdata:
   pgadmindata:
-  appdata:
